@@ -75,11 +75,11 @@ const ModelViewer = ({
   const getCameraPosition = () => {
     switch(viewMode) {
       case 'top':
-        return [0, 20, 0];
+        return [0, 20, 0] as [number, number, number];
       case 'front':
-        return [0, 5, 20];
+        return [0, 5, 20] as [number, number, number];
       default: // 3d view
-        return [10, 10, 10];
+        return [10, 10, 10] as [number, number, number];
     }
   };
   

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowLeft, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { toast } from '@/components/ui/sonner';
+import { toast } from 'sonner';
 
 // OpenAI API configuration
 const OPENAI_API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
@@ -33,10 +33,8 @@ const Convert = () => {
   // Process the blueprint using OpenAI API
   const processBlueprint = async (file) => {
     if (!apiKey) {
-      toast({
-        title: "API Key Required",
-        description: "Please enter your OpenAI API key in the customization panel",
-        variant: "destructive"
+      toast("API Key Required", {
+        description: "Please enter your OpenAI API key in the customization panel"
       });
       return;
     }
@@ -107,24 +105,19 @@ const Convert = () => {
         }
         
         setIsModelReady(true);
-        toast({
-          title: "Blueprint Processed Successfully",
+        toast("Blueprint Processed Successfully", {
           description: "Your 3D model has been generated."
         });
       } catch (jsonError) {
         console.error("Failed to parse API response:", jsonError);
-        toast({
-          title: "Processing Error",
-          description: "Failed to parse the API response.",
-          variant: "destructive"
+        toast("Processing Error", {
+          description: "Failed to parse the API response."
         });
       }
     } catch (error) {
       console.error("API request failed:", error);
-      toast({
-        title: "API Error",
-        description: error.message || "Failed to process blueprint with OpenAI API.",
-        variant: "destructive"
+      toast("API Error", {
+        description: error.message || "Failed to process blueprint with OpenAI API."
       });
     } finally {
       setIsProcessing(false);
@@ -173,10 +166,8 @@ const Convert = () => {
     if (blueprintFile) {
       processBlueprint(blueprintFile);
     } else {
-      toast({
-        title: "No Blueprint",
-        description: "Please upload a blueprint file first.",
-        variant: "warning"
+      toast("No Blueprint", {
+        description: "Please upload a blueprint file first."
       });
     }
   };
