@@ -1,7 +1,7 @@
 
 import React, { useRef } from 'react';
-import { Canvas, useFrame, extend } from '@react-three/fiber';
-import { OrbitControls, Grid, Box, Environment, Stage, PerspectiveCamera } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrbitControls, Grid, Environment, Stage, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 
 // Simple House model component
