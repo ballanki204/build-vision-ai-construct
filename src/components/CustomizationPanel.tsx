@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,20 +14,65 @@ import {
   Save, 
   Download,
   Share2,
-  Layers
+  Layers,
+  Key
 } from 'lucide-react';
 
-const CustomizationPanel = () => {
-  const [height, setHeight] = useState<number>(3);
-  const [width, setWidth] = useState<number>(6);
-  const [length, setLength] = useState<number>(4);
-  const [roofType, setRoofType] = useState<string>("pitched");
+interface CustomizationPanelProps {
+  onDimensionsChange?: (dimensions: any) => void;
+  onApiKeyChange?: (apiKey: string) => void;
+  initialDimensions?: {
+    width: number;
+    length: number;
+    height: number;
+  };
+  initialRoofType?: string;
+}
+
+const CustomizationPanel = ({
+  onDimensionsChange = () => {},
+  onApiKeyChange = () => {},
+  initialDimensions = { width: 6, length: 4, height: 3 },
+  initialRoofType = "pitched"
+}: CustomizationPanelProps) => {
+  const [height, setHeight] = useState<number>(initialDimensions.height);
+  const [width, setWidth] = useState<number>(initialDimensions.width);
+  const [length, setLength] = useState<number>(initialDimensions.length);
+  const [roofType, setRoofType] = useState<string>(initialRoofType);
   const [exportFormat, setExportFormat] = useState<string>("obj");
+  const [apiKey, setApiKey] = useState<string>("");
+  
+  // Apply initial dimensions when they change
+  useEffect(() => {
+    setHeight(initialDimensions.height);
+    setWidth(initialDimensions.width);
+    setLength(initialDimensions.length);
+  }, [initialDimensions]);
+  
+  // Apply initial roof type when it changes
+  useEffect(() => {
+    setRoofType(initialRoofType);
+  }, [initialRoofType]);
+  
+  const handleApplyChanges = () => {
+    onDimensionsChange({
+      height,
+      width,
+      length,
+      roofType
+    });
+  };
+  
+  const handleApiKeyUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newApiKey = e.target.value;
+    setApiKey(newApiKey);
+    onApiKeyChange(newApiKey);
+  };
   
   return (
     <div className="w-full bg-white rounded-lg shadow-sm border p-4">
       <Tabs defaultValue="dimensions">
-        <TabsList className="grid w-full grid-cols-3 mb-4">
+        <TabsList className="grid w-full grid-cols-4 mb-4">
           <TabsTrigger value="dimensions">
             <Ruler className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Dimensions</span>
@@ -40,6 +84,10 @@ const CustomizationPanel = () => {
           <TabsTrigger value="export">
             <Download className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Export</span>
+          </TabsTrigger>
+          <TabsTrigger value="api">
+            <Key className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">API</span>
           </TabsTrigger>
         </TabsList>
         
@@ -103,7 +151,7 @@ const CustomizationPanel = () => {
             </div>
             
             <div className="pt-2">
-              <Button className="w-full">
+              <Button className="w-full" onClick={handleApplyChanges}>
                 <Layers className="h-4 w-4 mr-2" />
                 Apply Changes
               </Button>
@@ -207,6 +255,31 @@ const CustomizationPanel = () => {
                 <Share2 className="h-4 w-4 mr-2" />
                 Share Model
               </Button>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="api" className="space-y-4">
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="apiKey" className="mb-2 block">OpenAI API Key</Label>
+              <Input 
+                id="apiKey"
+                type="password"
+                placeholder="Enter your OpenAI API key"
+                value={apiKey}
+                onChange={handleApiKeyUpdate}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Required for blueprint processing and AI features.
+              </p>
+            </div>
+            
+            <div className="pt-2">
+              <p className="text-sm text-gray-600 mb-4">
+                We use OpenAI's GPT-4o Vision model to analyze your blueprints and generate 3D models.
+                Your API key is used only in your browser and never stored on our servers.
+              </p>
             </div>
           </div>
         </TabsContent>
