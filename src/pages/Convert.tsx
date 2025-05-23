@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -13,12 +12,14 @@ import { toast } from 'sonner';
 
 // OpenAI API configuration
 const OPENAI_API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
+// Default API key (this should be input by the user normally)
+const DEFAULT_API_KEY = ""; // We'll let the user input this in the UI
 
 const Convert = () => {
   const [hasUploadedFile, setHasUploadedFile] = useState(false);
   const [isModelReady, setIsModelReady] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState(DEFAULT_API_KEY);
   const [currentViewMode, setCurrentViewMode] = useState('3d');
   const [modelDimensions, setModelDimensions] = useState({
     width: 6,
