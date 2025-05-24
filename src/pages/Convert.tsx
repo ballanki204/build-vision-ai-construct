@@ -12,8 +12,8 @@ import { toast } from 'sonner';
 
 // OpenAI API configuration
 const OPENAI_API_ENDPOINT = "https://api.openai.com/v1/chat/completions";
-// Default API key (this should be input by the user normally)
-const DEFAULT_API_KEY = ""; // We'll let the user input this in the UI
+// Default API key (prefilled with the provided key)
+const DEFAULT_API_KEY = "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";
 
 const Convert = () => {
   const [hasUploadedFile, setHasUploadedFile] = useState(false);
@@ -30,6 +30,14 @@ const Convert = () => {
   
   // Store the blueprint file
   const [blueprintFile, setBlueprintFile] = useState(null);
+  
+  // Effect to automatically process blueprint if API key and file are available
+  useEffect(() => {
+    if (blueprintFile && apiKey && !isModelReady && !isProcessing) {
+      // Process automatically when both file and API key are ready
+      handleProcessBlueprint();
+    }
+  }, [blueprintFile, apiKey]);
   
   // Process the blueprint using OpenAI API
   const processBlueprint = async (file) => {
@@ -215,6 +223,7 @@ const Convert = () => {
                     onApiKeyChange={handleApiKeyChange}
                     initialDimensions={modelDimensions}
                     initialRoofType={roofType}
+                    initialApiKey={apiKey}
                   />
                 </div>
               )}

@@ -27,20 +27,22 @@ interface CustomizationPanelProps {
     height: number;
   };
   initialRoofType?: string;
+  initialApiKey?: string;
 }
 
 const CustomizationPanel = ({
   onDimensionsChange = () => {},
   onApiKeyChange = () => {},
   initialDimensions = { width: 6, length: 4, height: 3 },
-  initialRoofType = "pitched"
+  initialRoofType = "pitched",
+  initialApiKey = ""
 }: CustomizationPanelProps) => {
   const [height, setHeight] = useState<number>(initialDimensions.height);
   const [width, setWidth] = useState<number>(initialDimensions.width);
   const [length, setLength] = useState<number>(initialDimensions.length);
   const [roofType, setRoofType] = useState<string>(initialRoofType);
   const [exportFormat, setExportFormat] = useState<string>("obj");
-  const [apiKey, setApiKey] = useState<string>("");
+  const [apiKey, setApiKey] = useState<string>(initialApiKey);
   
   // Apply initial dimensions when they change
   useEffect(() => {
@@ -53,6 +55,11 @@ const CustomizationPanel = ({
   useEffect(() => {
     setRoofType(initialRoofType);
   }, [initialRoofType]);
+  
+  // Apply initial API key when it changes
+  useEffect(() => {
+    setApiKey(initialApiKey);
+  }, [initialApiKey]);
   
   const handleApplyChanges = () => {
     onDimensionsChange({
